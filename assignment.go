@@ -70,14 +70,14 @@ func getAndMapJSON(path string, r *http.Request) (map[string]interface{}, error)
 func processJSON(githubMap map[string]interface{}, r *http.Request) (*responseJSON, int, error) {
 	var response = &responseJSON{}
 	//Get name of repo
-	if githubMap["full_name"] != nil {
-		name, ok := githubMap["full_name"].(string)
+	if githubMap["name"] != nil {
+		name, ok := githubMap["name"].(string)
 		if !ok {
-			return nil, http.StatusInternalServerError, errors.New("ERROR, unable to type assert 'full_name' to string")
+			return nil, http.StatusInternalServerError, errors.New("ERROR, unable to type assert 'name' to string")
 		}
-		response.Repo = "github.com/" + name
+		response.Repo = name
 	} else {
-		return nil, http.StatusBadRequest, errors.New("ERROR, malformed JSON, field 'full_name' not found")
+		return nil, http.StatusBadRequest, errors.New("ERROR, malformed JSON, field 'name' not found")
 	}
 	//Get owner of repo
 	if githubMap["owner"] != nil {
@@ -164,7 +164,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func main() {
+func init() {
 	http.HandleFunc(githubPath, handler)
 	http.ListenAndServe(":8080", nil)
 }
