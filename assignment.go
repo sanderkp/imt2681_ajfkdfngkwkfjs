@@ -1,4 +1,5 @@
 package appengine
+
 import "fmt"
 import "net/http"
 import "encoding/json"
@@ -13,16 +14,16 @@ const apiGithubPath = "https://api.github.com/repos/"
 
 //https://mholt.github.io/json-to-go/
 type gitContriber struct {
-	Login             string `json:"login"`
-	Contributions     int    `json:"contributions"`
+	Login         string `json:"login"`
+	Contributions int    `json:"contributions"`
 }
 
 type responseJSON struct {
-	Repo string              `json:"project"`
-	Owner string             `json:"owner"`
-	Comitter string          `json:"committer"`
-	Commits int              `json:"commits"`
-	Languages []string       `json:"language"`
+	Repo      string   `json:"project"`
+	Owner     string   `json:"owner"`
+	Comitter  string   `json:"committer"`
+	Commits   int      `json:"commits"`
+	Languages []string `json:"language"`
 }
 
 //Fetches JSON from path
@@ -89,7 +90,7 @@ func processJSON(githubMap map[string]interface{}, r *http.Request) (*responseJS
 			owner, ok := ownerMap["login"].(string)
 			if !ok {
 				return nil, http.StatusInternalServerError, errors.New("ERROR, unable to type assert 'login' to string")
-			} 
+			}
 			response.Owner = owner
 		} else {
 			return nil, http.StatusBadRequest, errors.New("ERROR, malformed JSON, field 'login' not found")
@@ -123,7 +124,7 @@ func processJSON(githubMap map[string]interface{}, r *http.Request) (*responseJS
 	if githubMap["languages_url"] != nil {
 		languageURL, ok := githubMap["languages_url"].(string)
 		if !ok {
-			return nil, http.StatusInternalServerError ,errors.New("ERROR, unable to type assert 'languages_url' to string")
+			return nil, http.StatusInternalServerError, errors.New("ERROR, unable to type assert 'languages_url' to string")
 		}
 		langMap, err := getAndMapJSON(languageURL, r)
 		if err != nil {
@@ -143,14 +144,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if len(r.URL.Path) >= len(githubPath) {
 		githubURI := r.URL.Path[len(githubPath):]
 		//Get the main json data
-		githubMap, err := getAndMapJSON(apiGithubPath + githubURI, r)
+		githubMap, err := getAndMapJSON(apiGithubPath+githubURI, r)
 		if err != nil {
 			fmt.Fprint(w, err)
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return
 		}
 		//Process the json
-		response,status,err := processJSON(githubMap, r)
+		response, status, err := processJSON(githubMap, r)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, http.StatusText(status), status)
