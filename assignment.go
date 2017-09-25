@@ -164,7 +164,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func init() {
+func main() {
 	http.HandleFunc(githubPath, handler)
 	http.ListenAndServe(":8080", nil)
 }
