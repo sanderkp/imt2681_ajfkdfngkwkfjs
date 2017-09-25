@@ -60,24 +60,24 @@ func testProcessJSON(t *testing.T, s string) (*responseJSON, int, error) {
 }
 
 func Test_processJSON(t *testing.T) {
-	//Test with json that does not have 'full_name' key
+	//Test with json that does not have 'name' key
 	resp, status, error := testProcessJSON(t, "{\"abc\": 123}")
 	if resp != nil {
-		t.Errorf("Expected resp from json with no 'full_name' to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
+		t.Errorf("Expected resp from json with no 'name' to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	if status != http.StatusBadRequest {
-		t.Errorf("Expected status from json with no 'full_name' to yield no StatusBadRequest, got: %p, error is: %s, status is: %d", resp, error, status)
+		t.Errorf("Expected status from json with no 'name' to yield no StatusBadRequest, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
-	//Test with json that does have 'full_name' key but is not a string
-	resp, status, error = testProcessJSON(t, "{\"full_name\":123}")
+	//Test with json that does have 'name' key but is not a string
+	resp, status, error = testProcessJSON(t, "{\"name\":123}")
 	if resp != nil {
-		t.Errorf("Expected resp from json with 'full_name' of type not string to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
+		t.Errorf("Expected resp from json with 'name' of type not string to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	if status != http.StatusInternalServerError {
-		t.Errorf("Expected status from json with 'full_name' of type not string to yield StatusInternalServerError, got: %p, error is: %s, status is: %d", resp, error, status)
+		t.Errorf("Expected status from json with 'name' of type not string to yield StatusInternalServerError, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does not have 'owner' key
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\"}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\"}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with no 'owner' to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -85,7 +85,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected status from json with no 'owner' to yield no StatusBadRequest, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does have 'owner' key but is not a map[string]interface{}
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":123}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":123}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with 'owner' of type not map[string]interface{} to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -93,7 +93,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected status from json with 'owner' of type not map[string]interface{} to yield StatusInternalServerError, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does have 'owner' but not login key
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":{\"test\":123}}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":{\"test\":123}}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with 'owner' but not 'login'to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -101,7 +101,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected resp from json with 'owner' but not 'login'to yield StatusBadRequest, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does have 'owner' and 'login' but which login key is not string
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":{\"login\":123}}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":{\"login\":123}}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with 'owner' and 'login' where login is not string to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -109,7 +109,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected resp from json with 'owner' and 'login' where login is not string to yield StatusInternalServerError, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does not have 'contributors_url'
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":{\"login\":\"bob\"}}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":{\"login\":\"bob\"}}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with no 'contributors_url' to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -117,7 +117,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected resp from json with no 'contributors_url' to yield StatusBadRequest, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does have 'contributors_url' but is not string
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":123}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":123}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with 'contributors_url' which is not string to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -125,7 +125,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected resp from json with 'contributors_url' which is not string to yield StatusInternalServerError, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does have 'contributors_url' but which points to bogus
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"bab\"}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"bab\"}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with 'contributors_url' which points to bogus to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -133,7 +133,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected resp from json with 'contributors_url' which points to bogus to yield StatusInternalServerError, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does have 'contributors_url' but which points to a json with bogus
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"https://sanderkp.no/invalid_json.json\"}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"https://sanderkp.no/invalid_json.json\"}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with 'contributors_url' which points to a json with bogus to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -141,7 +141,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected resp from json with 'contributors_url' which points to a json with bogus to yield StatusInternalServerError, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does not have 'languages_url'
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"https://sanderkp.no/golang_go_contributors.json\"}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"https://sanderkp.no/golang_go_contributors.json\"}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with no 'languages_url' to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -149,7 +149,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected resp from json with no 'languages_url' to yield StatusBadRequest, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does have 'languages_url' but is not string
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"https://sanderkp.no/golang_go_contributors.json\", \"languages_url\":123}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"https://sanderkp.no/golang_go_contributors.json\", \"languages_url\":123}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with 'languages_url' not of type string to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -157,7 +157,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected resp from json with 'languages_url' not of type string to yield StatusInternalServerError, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with json that does have 'languages_url' but does not point to anything valid
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"https://sanderkp.no/golang_go_contributors.json\", \"languages_url\":\"bab\"}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"https://sanderkp.no/golang_go_contributors.json\", \"languages_url\":\"bab\"}")
 	if resp != nil {
 		t.Errorf("Expected resp from json with 'languages_url' which does not point anything valid to yield no response, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
@@ -165,7 +165,7 @@ func Test_processJSON(t *testing.T) {
 		t.Errorf("Expected resp from json with 'languages_url' which does not point anything valid to yield StatusInternalServerError, got: %p, error is: %s, status is: %d", resp, error, status)
 	}
 	//Test with valid json
-	resp, status, error = testProcessJSON(t, "{\"full_name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"https://sanderkp.no/golang_go_contributors.json\", \"languages_url\":\"https://sanderkp.no/golang_go_languages.json\"}")
+	resp, status, error = testProcessJSON(t, "{\"name\":\"yo\",\"owner\":{\"login\":\"bob\"}, \"contributors_url\":\"https://sanderkp.no/golang_go_contributors.json\", \"languages_url\":\"https://sanderkp.no/golang_go_languages.json\"}")
 	if resp == nil {
 		t.Errorf("Expected valid json to work, resp is: %p, error is: %s, status is: %d", resp, error, status)
 	}
